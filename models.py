@@ -6,7 +6,7 @@ from database import Base
 class Doctor(Base):
     __tablename__ = "doctors"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     first_name = Column(String(45))
     last_name = Column(String(45))
     specialist = Column(String(45))
@@ -15,7 +15,7 @@ class Doctor(Base):
 class Patient(Base):
     __tablename__ = "patients"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     first_name = Column(String(45))
     last_name = Column(String(45))
     gender = Column(String(45))
@@ -27,7 +27,7 @@ class Patient(Base):
 class Medicine(Base):
     __tablename__ = "medicines"
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True)
     med_name = Column(String(45))
     med_type = Column(String(45))
     cost = Column(Float)
@@ -36,7 +36,7 @@ class Medicine(Base):
 class Insurance(Base):
     __tablename__ = "insurances"
 
-    insurance_number = Column(Integer, primary_key=True, index=True)
+    insurance_number = Column(Integer, primary_key=True)
     provider_name = Column(String(45))
     exp_date = Column(Date)
     patient_id = Column(Integer)

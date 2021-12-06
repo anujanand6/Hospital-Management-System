@@ -12,7 +12,7 @@ def get_db():
 
 
 def show_records(db):
-    records = db.query(models.Doctor).all()
+    records = db.query(models.Insurance).all()
     return records
 
 
@@ -22,7 +22,7 @@ def main():
         # yield db
         result = show_records(db)
         for record in result:
-            print(record.first_name)
+            print(record.provider_name)
     finally:
         db.close()
 

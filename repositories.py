@@ -116,8 +116,8 @@ class InsuranceRepository:
         return records
 
     @staticmethod
-    def find_insurance_by_id(db, ins_num):
-        records = db.query(Insurance).where(Insurance.insurance_number == ins_num)
+    def find_insurance_by_id(db, id):
+        records = db.query(Insurance).where(Insurance.id == id)
         return records
 
     @staticmethod
@@ -127,13 +127,13 @@ class InsuranceRepository:
         db_session.commit()
 
     @staticmethod
-    def delete_insurance_by_id(db_session, ins_num):
-        db_session.query(Insurance).where(Insurance.insurance_number == ins_num).delete()
+    def delete_insurance_by_id(db_session, id):
+        db_session.query(Insurance).where(Insurance.id == id).delete()
         db_session.commit()
 
     @staticmethod
-    def update_insurance(db_session, ins_num, pname, edate, pid):
-        db_session.query(Insurance).where(Insurance.insurance_number == ins_num).update(
+    def update_insurance(db_session, id, pname, edate, pid):
+        db_session.query(Insurance).where(Insurance.id == id).update(
             {"provider_name": pname, "exp_date": edate, "patient_id": pid}
         )
         db_session.commit()

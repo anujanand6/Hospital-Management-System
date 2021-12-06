@@ -36,15 +36,9 @@ view_medicines_temp = """
 
 view_insurances_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
-    <p style="font-size:15px;">Insurance Number: {}</h6>
+    <p style="font-size:15px;">Insurance ID: {}</h6>
     <p style="font-size:15px;">Provider Name: {}</h6>
     <p style="font-size:15px;">Expiry Date: {}</h6>
     <p style="font-size:15px;">Patient ID: {}</h6>
     </div>
     """
-
-# full_message_temp = """
-# 	<div style="background-color:silver;overflow-x: auto; padding:10px;border-radius:5px;margin:10px;">
-# 		<p style="text-align:justify;color:black;padding:10px">{}</p>
-# 	</div>
-# 	"""

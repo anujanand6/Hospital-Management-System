@@ -6,9 +6,6 @@ from database import SessionLocal, engine
 
 
 def main():
-    """
-    A Simple CRUD implementation
-    """
 
     st.markdown(html.title_temp.format('royalblue', 'white'), unsafe_allow_html=True)
 
@@ -137,13 +134,91 @@ def main():
                                                             record.med_type, record.cost),
                             unsafe_allow_html=True)
 
+        elif choice == "Find Medicine By ID":
+            st.subheader("Find Medicine By ID")
+            record_ids = [record.id for record in MedicineRepository.find_all_medicines(db)]
+            medicine_id = st.selectbox("Choose Medicine ID", record_ids)
+            records = MedicineRepository.find_medicine_by_id(db, medicine_id)
+            for rec in records:
+                st.markdown(html.view_medicines_temp.format(rec.id, rec.med_name, rec.med_type, rec.cost),
+                            unsafe_allow_html=True)
+
+        elif choice == "Create Medicine":
+            st.subheader("Create Medicine")
+            mname = st.text_input("Enter medicine name")
+            mtype = st.text_input("Enter medicine type")
+            cost = st.text_input("Enter cost")
+            if st.button('Create'):
+                MedicineRepository.create_medicine(db, mname, mtype, cost)
+                st.success("Medicine: {} successfully created!".format(mname))
+
+        elif choice == "Delete Medicine By ID":
+            st.subheader("Delete Medicine By ID")
+            record_ids = [record.id for record in MedicineRepository.find_all_medicines(db)]
+            medicine_id = st.selectbox("Choose Medicine ID", record_ids)
+            if st.button('Delete'):
+                MedicineRepository.delete_medicine_by_id(db, medicine_id)
+                st.success("Medicine: {} successfully deleted!".format(medicine_id))
+
+        elif choice == "Update Medicine":
+            st.subheader("Update Medicine")
+            record_ids = [record.id for record in MedicineRepository.find_all_medicines(db)]
+            id = st.selectbox("Choose Medicine ID", record_ids)
+            record = MedicineRepository.find_medicine_by_id(db, id)[0]
+            mname = st.text_input("Enter medicine name", value=record.med_name)
+            mtype = st.text_input("Enter medicine type", value=record.med_type)
+            cost = st.text_input("Enter cost", value=record.cost)
+            if st.button('Update'):
+                MedicineRepository.update_medicine(db, id, mname, mtype, cost)
+                st.success("Medicine: {} successfully updated!".format(mname))
+
         elif choice == "View Insurances":
             st.subheader("View Insurances")
             records = InsuranceRepository.find_all_insurances(db)
             for record in records:
-                st.markdown(html.view_insurances_temp.format(record.insurance_number, record.provider_name,
+                st.markdown(html.view_insurances_temp.format(record.id, record.provider_name,
                                                              record.exp_date, record.patient_id),
                             unsafe_allow_html=True)
+
+        elif choice == "Find Insurance By ID":
+            st.subheader("Find Insurance By ID")
+            record_ids = [record.id for record in InsuranceRepository.find_all_insurances(db)]
+            insurance_id = st.selectbox("Choose Insurance ID", record_ids)
+            records = InsuranceRepository.find_insurance_by_id(db, insurance_id)
+            for rec in records:
+                st.markdown(html.view_insurances_temp.format(rec.id, rec.provider_name,
+                                                            rec.exp_date, rec.patient_id),
+                            unsafe_allow_html=True)
+
+        elif choice == "Create Insurance":
+            st.subheader("Create Insurance")
+            pname = st.text_input("Enter Provider name")
+            edate = st.text_input("Enter Expiry Date")
+            record_ids = [record.id for record in PatientRepository.find_all_patients(db)]
+            patient_id = st.selectbox("Choose Patient ID", record_ids)
+            if st.button('Create'):
+                InsuranceRepository.create_insurance(db, pname, edate, patient_id)
+                st.success("Insurance: {} successfully created!".format(pname))
+
+        elif choice == "Delete Insurance By ID":
+            st.subheader("Delete Insurance By ID")
+            record_ids = [record.id for record in InsuranceRepository.find_all_insurances(db)]
+            insurance_id = st.selectbox("Choose Insurance ID", record_ids)
+            if st.button('Delete'):
+                InsuranceRepository.delete_insurance_by_id(db, insurance_id)
+                st.success("Insurance: {} successfully deleted!".format(insurance_id))
+
+        elif choice == "Update Insurance":
+            st.subheader("Update Insurance")
+            record_ids = [record.id for record in InsuranceRepository.find_all_insurances(db)]
+            id = st.selectbox("Choose Insurance ID", record_ids)
+            record = InsuranceRepository.find_insurance_by_id(db, id)[0]
+            pname = st.text_input("Enter provider name", value=record.provider_name)
+            edate = st.text_input("Enter expiry date", value=record.exp_date)
+            patient_id = st.text_input("Enter patient id", value=record.patient_id)
+            if st.button('Update'):
+                InsuranceRepository.update_insurance(db, id, pname, edate, patient_id)
+                st.success("Insurance: {} successfully updated!".format(pname))
 
     finally:
         db.close()

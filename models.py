@@ -36,7 +36,7 @@ class Medicine(Base):
 class Insurance(Base):
     __tablename__ = "insurances"
 
-    insurance_number = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     provider_name = Column(String(45))
     exp_date = Column(Date)
     patient_id = Column(Integer)

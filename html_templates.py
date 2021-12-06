@@ -4,15 +4,6 @@ title_temp = """
     </div>
     """
 
-home_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
-    <h3>Doctors</h3>
-    <h3>Patients</h3>
-    <h3>Medicines</h3>
-    <h3>Insurances</h3>
-    </div>
-    """
-
 view_doctors_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
     <p style="font-size:15px;">ID: {}</P>

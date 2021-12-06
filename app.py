@@ -1,31 +1,7 @@
 import streamlit as st
+import html_templates as html
 import repositories
 from database import SessionLocal, engine
-
-
-def get_db():
-    try:
-        db = SessionLocal()
-        yield db
-    finally:
-        db.close()
-
-
-head_message_temp = """
-	<div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
-	<h6>First Name: {}</h6>
-	<h6>Last Name: {}</h6>
-	<h6>Specialist: {}</h6>
-	</div>
-	"""
-
-# full_message_temp = """
-# 	<div style="background-color:silver;overflow-x: auto; padding:10px;border-radius:5px;margin:10px;">
-# 		<p style="text-align:justify;color:black;padding:10px">{}</p>
-# 	</div>
-# 	"""
-
-HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem">{}</div>"""
 
 
 def main():
@@ -33,41 +9,51 @@ def main():
     A Simple CRUD implementation
     """
 
-    html_temp = """
-    	<div style="background-color:{};padding:10px;border-radius:10px">
-    	<h1 style="color:{};text-align:center;"> Hospital Management System </h1>
-    	</div>
-    	"""
-
-    st.markdown(html_temp.format('royalblue', 'white'), unsafe_allow_html=True)
+    st.markdown(html.title_temp.format('royalblue', 'white'), unsafe_allow_html=True)
 
     menu = ["Home", "View Doctors", "View Patients", "View Medicines", "View Insurances"]
-
     choice = st.sidebar.selectbox("Menu", menu)
 
-    if choice == "Home":
-        st.subheader("Choose one table")
-        st.text("Doctors")
-        st.text("Patients")
-        st.text("Medicines")
-        st.text("Insurances")
-
-    elif choice == "View Doctors":
-        st.subheader("View Doctors")
+    try:
         db = SessionLocal()
-        records = repositories.DoctorRepository.find_all_doctors(db)
-        for rec in records:
-            st.markdown(head_message_temp.format(rec.first_name, rec.last_name, rec.specialist), unsafe_allow_html=True)
+
+        if choice == "Home":
+            st.subheader("Choose one table")
+            st.markdown(html.home_temp, unsafe_allow_html=True)
+
+        elif choice == "View Doctors":
+            st.subheader("View Doctors")
+            records = repositories.DoctorRepository.find_all_doctors(db)
+            for rec in records:
+                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name, rec.specialist),
+                            unsafe_allow_html=True)
+
+        elif choice == "View Patients":
+            st.subheader("View Patients")
+            records = repositories.PatientRepository.find_all_patients(db)
+            for rec in records:
+                st.markdown(html.view_patients_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                           rec.gender, rec.dob, rec.phone, rec.address),
+                            unsafe_allow_html=True)
+
+        elif choice == "View Medicines":
+            st.subheader("View Medicines")
+            records = repositories.MedicineRepository.find_all_medicines(db)
+            for record in records:
+                st.markdown(html.view_medicines_temp.format(record.id, record.med_name,
+                                                            record.med_type, record.cost),
+                            unsafe_allow_html=True)
+
+        elif choice == "View Insurances":
+            st.subheader("View Insurances")
+            records = repositories.InsuranceRepository.find_all_insurances(db)
+            for record in records:
+                st.markdown(html.view_insurances_temp.format(record.insurance_number, record.provider_name,
+                                                             record.exp_date, record.patient_id),
+                            unsafe_allow_html=True)
+
+    finally:
         db.close()
-
-    elif choice == "Add Doctors":
-        st.subheader("Add")
-
-    elif choice == "Search Doctors":
-        st.subheader("Search")
-
-    elif choice == "Manage Doctors":
-        st.subheader("Manage")
 
 
 if __name__ == '__main__':

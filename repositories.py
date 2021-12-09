@@ -1,4 +1,5 @@
-from models import Doctor, Patient, Medicine, Insurance
+from models import Doctor, Patient, Department, \
+    Medicine, Insurance, Designation, Doctor2Department
 
 
 class DoctorRepository:
@@ -17,8 +18,9 @@ class DoctorRepository:
         return records
 
     @staticmethod
-    def create_doctor(db_session, fn, ln, sp):
-        new_record = Doctor(first_name=fn, last_name=ln, specialist=sp)
+    def create_doctor(db_session, fn, ln, age, desig):
+        new_record = Doctor(first_name=fn, last_name=ln,
+                            age=age, designation=desig)
         db_session.add(new_record)
         db_session.commit()
 
@@ -28,11 +30,17 @@ class DoctorRepository:
         db_session.commit()
 
     @staticmethod
-    def update_doctor(db_session, id, fn, ln, sp):
+    def update_doctor(db_session, id, fn, ln, age, desig):
         db_session.query(Doctor).where(Doctor.id == id).update(
-            {Doctor.first_name: fn, Doctor.last_name: ln, Doctor.specialist: sp}
+            {"first_name": fn, "last_name": ln, "age": age,
+             "designation": desig}
         )
         db_session.commit()
+
+    @staticmethod
+    def find_all_designations(db_session):
+        records = db_session.query(Designation).all()
+        return records
 
 
 class PatientRepository:
@@ -67,6 +75,40 @@ class PatientRepository:
         db_session.query(Patient).where(Patient.id == id).update(
             {"first_name": fn, "last_name": ln, "gender": gen, "dob": dob,
              "phone": ph, "address": add}
+        )
+        db_session.commit()
+
+
+class DepartmentRepository:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def find_all_departments(db):
+        records = db.query(Department).all()
+        return records
+
+    @staticmethod
+    def find_department_by_id(db, id):
+        records = db.query(Department).where(Department.id == id)
+        return records
+
+    @staticmethod
+    def create_department(db_session, dept_name, build_name):
+        new_record = Department(dept_name=dept_name, building_name=build_name)
+        db_session.add(new_record)
+        db_session.commit()
+
+    @staticmethod
+    def delete_department_by_id(db_session, id):
+        db_session.query(Department).where(Department.id == id).delete()
+        db_session.commit()
+
+    @staticmethod
+    def update_department(db_session, id, dept_name, build_name):
+        db_session.query(Department).where(Department.id == id).update(
+            {"dept_name": dept_name, "building_name": build_name}
         )
         db_session.commit()
 

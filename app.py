@@ -1,12 +1,11 @@
 import streamlit as st
 import html_templates as html
 from repositories import DoctorRepository, PatientRepository, \
-    MedicineRepository, InsuranceRepository
+    MedicineRepository, InsuranceRepository, DepartmentRepository
 from database import SessionLocal, engine
 
 
 def main():
-
     st.markdown(html.title_temp.format('royalblue', 'white'), unsafe_allow_html=True)
 
     menu = ["Home", "View Doctors", "View Patients", "View Medicines", "View Insurances",
@@ -27,26 +26,37 @@ def main():
             st.subheader("View Doctors")
             records = DoctorRepository.find_all_doctors(db)
             for rec in records:
-                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name, rec.specialist),
+                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                          rec.age, rec.designation),
                             unsafe_allow_html=True)
+
+            # if st.button("View Doctor by Department ID"):
+            #     record_ids = [record.id for record in DepartmentRepository.find_all_departments(db)]
+            #     dept_id = st.selectbox("Choose Department ID", record_ids)
+            #     records = DoctorRepository.find_doctor_by_dept_id(db, dept_id)
+            #     for rec in records:
+            #         st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+            #                                                   rec.age, rec.designation),
+            #                     unsafe_allow_html=True)
 
         elif choice == "Find Doctor By ID":
             record_ids = [record.id for record in DoctorRepository.find_all_doctors(db)]
             doc_id = st.selectbox("Choose Doctor ID", record_ids)
             records = DoctorRepository.find_doctor_by_id(db, doc_id)
             for rec in records:
-                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name, rec.specialist),
+                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                          rec.age, rec.designation),
                             unsafe_allow_html=True)
 
         elif choice == "Create Doctor":
             st.subheader("Create Doctor")
             fn = st.text_input("Enter first name")
             ln = st.text_input("Enter last name")
-            sp = st.selectbox("Enter Specialist",
-                              ["CARDIOLOGIST", "FAMILY PHYSICIAN", "ONCOLOGIST",
-                               "PEDIATRICIAN", "RADIOLOGIST"])
+            age = st.text_input("Enter age")
+            designation_list = [d.designation for d in DoctorRepository.find_all_designations(db)]
+            designation = st.selectbox("Enter designation", designation_list)
             if st.button('Create'):
-                DoctorRepository.create_doctor(db, fn, ln, sp)
+                DoctorRepository.create_doctor(db, fn, ln, age, designation)
                 st.success("Doctor: {} {} successfully created!".format(fn, ln))
 
         elif choice == "Delete Doctor By ID":
@@ -64,12 +74,12 @@ def main():
             record = DoctorRepository.find_doctor_by_id(db, id)[0]
             fn = st.text_input("Enter first name", value=record.first_name)
             ln = st.text_input("Enter last name", value=record.last_name)
-            sp_list = ["CARDIOLOGIST", "FAMILY PHYSICIAN", "ONCOLOGIST",
-                       "PEDIATRICIAN", "RADIOLOGIST"]
-            sp_index = sp_list.index(record.specialist)
-            sp = st.selectbox("Enter Specialist", sp_list, index=sp_index)
+            age = st.text_input("Enter age", value=record.age)
+            designation_list = [d.designation for d in DoctorRepository.find_all_designations(db)]
+            d_index = designation_list.index(record.designation)
+            designation = st.selectbox("Enter designation", designation_list, index=d_index)
             if st.button('Update'):
-                DoctorRepository.update_doctor(db, id, fn, ln, sp)
+                DoctorRepository.update_doctor(db, id, fn, ln, age, designation)
                 st.success("Doctor: {} {} successfully updated!".format(fn, ln))
 
         elif choice == "View Patients":
@@ -187,7 +197,7 @@ def main():
             records = InsuranceRepository.find_insurance_by_id(db, insurance_id)
             for rec in records:
                 st.markdown(html.view_insurances_temp.format(rec.id, rec.provider_name,
-                                                            rec.exp_date, rec.patient_id),
+                                                             rec.exp_date, rec.patient_id),
                             unsafe_allow_html=True)
 
         elif choice == "Create Insurance":

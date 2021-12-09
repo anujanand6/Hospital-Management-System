@@ -9,7 +9,14 @@ class Doctor(Base):
     id = Column(Integer, primary_key=True)
     first_name = Column(String(45))
     last_name = Column(String(45))
-    specialist = Column(String(45))
+    age = Column(Integer)
+    designation = Column(String(100))
+
+
+class Designation(Base):
+    __tablename__ = "designations"
+
+    designation = Column(String(100), primary_key=True)
 
 
 class Patient(Base):
@@ -40,3 +47,21 @@ class Insurance(Base):
     provider_name = Column(String(45))
     exp_date = Column(Date)
     patient_id = Column(Integer)
+
+
+class Department(Base):
+    __tablename__ = "departments"
+
+    id = Column(Integer, primary_key=True)
+    dept_name = Column(String(45))
+    building_name = Column(String(45))
+
+
+class Doctor2Department(Base):
+    __tablename__ = "doctor_2_department"
+
+    id = Column(Integer, primary_key=True)
+    doctor_id = Column(Integer)
+    dept_id = Column(Integer)
+
+

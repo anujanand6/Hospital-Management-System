@@ -6,22 +6,31 @@ title_temp = """
 
 view_doctors_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
-    <p style="font-size:15px;">ID: {}</P>
-    <p style="font-size:15px;">First Name: {}</p>
-    <p style="font-size:15px;">Last Name: {}</p>
-    <p style="font-size:15px;">Specialist: {}</p>
+    <p style="font-size:16px;">ID: {}</P>
+    <p style="font-size:16px;">First Name: {}</p>
+    <p style="font-size:16px;">Last Name: {}</p>
+    <p style="font-size:16px;">Age: {}</p>
+    <p style="font-size:16px;">Designation: {}</p>
     </div>
     """
 
 view_patients_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
-    <p style="font-size:15px;">ID: {}</h6>
-    <p style="font-size:15px;">First Name: {}</h6>
-    <p style="font-size:15px;">Last Name: {}</h6>
-    <p style="font-size:15px;">Gender: {}</h6>
-    <p style="font-size:15px;">DOB: {}</h6>
-    <p style="font-size:15px;">Phone: {}</h6>
-    <p style="font-size:15px;">Address: {}</h6>
+    <p style="font-size:16px;">ID: {}</h6>
+    <p style="font-size:16px;">First Name: {}</h6>
+    <p style="font-size:16px;">Last Name: {}</h6>
+    <p style="font-size:16px;">Gender: {}</h6>
+    <p style="font-size:16px;">DOB: {}</h6>
+    <p style="font-size:16px;">Phone: {}</h6>
+    <p style="font-size:16px;">Address: {}</h6>
+    </div>
+    """
+
+view_departments_temp = """
+    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <p style="font-size:16px;">ID: {}</h6>
+    <p style="font-size:16px;">Department Name: {}</h6>
+    <p style="font-size:16px;">Building Name: {}</h6>
     </div>
     """
 

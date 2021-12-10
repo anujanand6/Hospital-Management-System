@@ -4,6 +4,9 @@ from database import Base
 
 
 class Doctor(Base):
+    """
+    ORM model for table doctors
+    """
     __tablename__ = "doctors"
 
     id = Column(Integer, primary_key=True)
@@ -14,12 +17,18 @@ class Doctor(Base):
 
 
 class Designation(Base):
+    """
+    ORM model for table designations
+    """
     __tablename__ = "designations"
 
     designation = Column(String(100), primary_key=True)
 
 
 class Department(Base):
+    """
+    ORM model for table departments
+    """
     __tablename__ = "departments"
 
     id = Column(Integer, primary_key=True)
@@ -28,6 +37,9 @@ class Department(Base):
 
 
 class Doctor2Department(Base):
+    """
+    ORM model for table doctor_2_department
+    """
     __tablename__ = "doctor_2_department"
 
     id = Column(Integer, primary_key=True)
@@ -36,6 +48,9 @@ class Doctor2Department(Base):
 
 
 class Patient(Base):
+    """
+    ORM model for table patients
+    """
     __tablename__ = "patients"
 
     id = Column(Integer, primary_key=True)
@@ -48,6 +63,9 @@ class Patient(Base):
 
 
 class Appointment(Base):
+    """
+    ORM model for table appointments
+    """
     __tablename__ = "appointments"
 
     id = Column(Integer, primary_key=True)
@@ -59,6 +77,9 @@ class Appointment(Base):
 
 
 class Medicine(Base):
+    """
+    ORM model for table medicines
+    """
     __tablename__ = "medicines"
 
     id = Column(Integer, primary_key=True)
@@ -68,6 +89,9 @@ class Medicine(Base):
 
 
 class PrescribedMedicine(Base):
+    """
+    ORM model for table prescribed_meds
+    """
     __tablename__ = "prescribed_meds"
 
     id = Column(Integer, primary_key=True)
@@ -78,6 +102,9 @@ class PrescribedMedicine(Base):
 
 
 class Insurance(Base):
+    """
+    ORM model for table insurances
+    """
     __tablename__ = "insurances"
 
     id = Column(Integer, primary_key=True)
@@ -87,6 +114,9 @@ class Insurance(Base):
 
 
 class Bill(Base):
+    """
+    ORM model for table bills
+    """
     __tablename__ = "bills"
 
     id = Column(Integer, primary_key=True)
@@ -97,6 +127,9 @@ class Bill(Base):
 
 
 class LabFee(Base):
+    """
+    ORM model for table lab_fees
+    """
     __tablename__ = "lab_fees"
 
     id = Column(Integer, primary_key=True)
@@ -107,6 +140,9 @@ class LabFee(Base):
 
 
 class RoomFee(Base):
+    """
+    ORM model for table room_fees
+    """
     __tablename__ = "room_fees"
 
     id = Column(Integer, primary_key=True)

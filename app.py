@@ -1,9 +1,10 @@
 import streamlit as st
 import html_templates as html
 from database import SessionLocal, engine
+from menu import OPTION_LIST
 from repositories import DoctorRepository, PatientRepository, \
     MedicineRepository, InsuranceRepository, DepartmentRepository, \
-    Doctor2DepartmentRepository
+    Doctor2DepartmentRepository, BillRepository
 
 
 def create_db_session():
@@ -16,15 +17,7 @@ def main():
 
     st.markdown(html.title_temp.format('royalblue', 'white'), unsafe_allow_html=True)
 
-    menu = ["Home", "View Doctors", "View Patients", "View Medicines", "View Insurances",
-            "Find Doctor By ID", "Create Doctor", "Update Doctor", "Delete Doctor By ID",
-            "Find Doctor by Department ID", "Find Departments by Doctor ID",
-            "Find Patient By ID", "Create Patient", "Update Patient", "Delete Patient By ID",
-            "Find Patients By Insurance ID",
-            "Find Medicine By ID", "Create Medicine", "Update Medicine", "Delete Medicine By ID",
-            "Find Insurance By ID", "Create Insurance", "Update Insurance", "Delete Insurance By ID"]
-
-    choice = st.sidebar.radio("Menu", menu)
+    choice = st.sidebar.radio("Menu", OPTION_LIST)
 
     try:
 
@@ -145,7 +138,7 @@ def main():
             fn = st.text_input("Enter first name")
             ln = st.text_input("Enter last name")
             gen = st.text_input("Enter gender")
-            dob = st.text_input("Enter DOB")
+            dob = st.text_input("Enter DOB (YYYY-MM-DD)")
             phone = st.text_input("Enter phone number")
             address = st.text_input("Enter address")
             if st.button('Create'):
@@ -168,7 +161,7 @@ def main():
             fn = st.text_input("Enter first name", value=record.first_name)
             ln = st.text_input("Enter last name", value=record.last_name)
             gen = st.text_input("Enter gender", value=record.gender)
-            dob = st.text_input("Enter DOB", value=record.dob)
+            dob = st.text_input("Enter DOB (YYYY-MM-DD)", value=record.dob)
             phone = st.text_input("Enter phone number", value=record.phone)
             address = st.text_input("Enter address", value=record.address)
             if st.button('Update'):
@@ -268,6 +261,37 @@ def main():
             if st.button('Update'):
                 InsuranceRepository.update_insurance(db, id, pname, edate, patient_id)
                 st.success("Insurance: {} successfully updated!".format(pname))
+
+        elif choice == "Find Insurances By Patient ID":
+            st.subheader("Find Insurances By Patient ID")
+            rec_ids = [record.id for record in PatientRepository.find_all_patients(db)]
+            rec_id = st.selectbox("Choose Patient ID", rec_ids)
+            records = InsuranceRepository.find_insurances_by_patient_id(db, rec_id)
+            for rec in records:
+                st.markdown(html.view_insurances_temp.format(rec.id, rec.provider_name,
+                                                             rec.exp_date, rec.patient_id),
+                            unsafe_allow_html=True)
+
+        elif choice == "Find Insurances By Bill ID":
+            st.subheader("Find Insurances By Bill ID")
+            rec_ids = [record.id for record in BillRepository.find_all_bills(db)]
+            rec_id = st.selectbox("Choose Bill ID", rec_ids)
+            insurance_ids = BillRepository.find_insurance_by_bill_id(db, rec_id)
+            records = [InsuranceRepository.find_insurance_by_id(db, id)[0] for id in insurance_ids]
+            for rec in records:
+                st.markdown(html.view_insurances_temp.format(rec.id, rec.provider_name,
+                                                             rec.exp_date, rec.patient_id),
+                            unsafe_allow_html=True)
+
+        elif choice == "Find Bills By Insurance ID":
+            st.subheader("Find Bills By Insurance ID")
+            rec_ids = [record.id for record in InsuranceRepository.find_all_insurances(db)]
+            rec_id = st.selectbox("Choose Insurance ID", rec_ids)
+            records = BillRepository.find_bills_by_insurance_id(db, rec_id)
+            for rec in records:
+                st.markdown(html.view_bills_temp.format(rec.id, rec.medicine_charge, rec.doctor_charge),
+                            unsafe_allow_html=True)
+
 
     except Exception as e:
         raise Exception(e)

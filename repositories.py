@@ -1,5 +1,6 @@
 from models import Doctor, Patient, Department, \
-    Medicine, Insurance, Designation, Doctor2Department
+    Medicine, Insurance, Designation, Doctor2Department, \
+    Bill, Appointment
 
 
 class DoctorRepository:
@@ -207,3 +208,56 @@ class InsuranceRepository:
         records = db.query(Insurance).where(Insurance.id == id)
         pids = [r.patient_id for r in records]
         return pids
+
+    @staticmethod
+    def find_insurances_by_patient_id(db, id):
+        records = db.query(Insurance).where(Insurance.patient_id == id)
+        return records
+
+
+class BillRepository:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def find_all_bills(db):
+        records = db.query(Bill).all()
+        return records
+
+    @staticmethod
+    def find_bill_by_id(db, id):
+        records = db.query(Bill).where(Bill.id == id)
+        return records
+
+    @staticmethod
+    def create_bill(db_session, dchar, medchar, pid, iid):
+        new_record = Bill(doctor_charge=dchar, medicine_charge=medchar,
+                          patient_id=pid, insurance_id=iid)
+        db_session.add(new_record)
+        db_session.commit()
+
+    @staticmethod
+    def delete_bill_by_id(db_session, id):
+        db_session.query(Bill).where(Bill.id == id).delete()
+        db_session.commit()
+
+    @staticmethod
+    def update_bill(db_session, id, dchar, medchar, pid, iid):
+        db_session.query(Bill).where(Bill.id == id).update(
+            {"doctor_charge": dchar, "medicine_charge": medchar,
+             "patient_id": pid, "insurance_id": iid}
+        )
+        db_session.commit()
+
+    @staticmethod
+    def find_insurance_by_bill_id(db, id):
+        records = db.query(Bill).where(Bill.id == id)
+        iids = [r.insurance_id for r in records]
+        return iids
+
+    @staticmethod
+    def find_bills_by_insurance_id(db, id):
+        records = db.query(Bill).where(Bill.insurance_id == id)
+        return records
+

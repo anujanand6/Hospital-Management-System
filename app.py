@@ -1,28 +1,44 @@
 import streamlit as st
 import html_templates as html
-from repositories import DoctorRepository, PatientRepository, \
-    MedicineRepository, InsuranceRepository, DepartmentRepository
 from database import SessionLocal, engine
+from repositories import DoctorRepository, PatientRepository, \
+    MedicineRepository, InsuranceRepository, DepartmentRepository, \
+    Doctor2DepartmentRepository
+
+
+def create_db_session():
+    db = SessionLocal()
+    return db
 
 
 def main():
+    db = create_db_session()
+
     st.markdown(html.title_temp.format('royalblue', 'white'), unsafe_allow_html=True)
 
     menu = ["Home", "View Doctors", "View Patients", "View Medicines", "View Insurances",
             "Find Doctor By ID", "Create Doctor", "Update Doctor", "Delete Doctor By ID",
+            "Find Doctor by Department ID", "Find Departments by Doctor ID",
             "Find Patient By ID", "Create Patient", "Update Patient", "Delete Patient By ID",
+            "Find Patients By Insurance ID",
             "Find Medicine By ID", "Create Medicine", "Update Medicine", "Delete Medicine By ID",
             "Find Insurance By ID", "Create Insurance", "Update Insurance", "Delete Insurance By ID"]
-    choice = st.sidebar.selectbox("Menu", menu)
+
+    choice = st.sidebar.radio("Menu", menu)
 
     try:
-        db = SessionLocal()
+
+        # with st.sidebar.expander('Doctors', expanded=False):
+        #     choice = st.radio("Menu", menu)
+        #
+        # with st.sidebar.expander('Patients', expanded=False):
+        #     choice = st.radio("Patients", ["View Patients"])
 
         if choice == "Home":
             st.text("This is the front end interface.")
             # st.markdown(html.home_temp, unsafe_allow_html=True)
 
-        if choice == "View Doctors":
+        elif choice == "View Doctors":
             st.subheader("View Doctors")
             records = DoctorRepository.find_all_doctors(db)
             for rec in records:
@@ -30,20 +46,22 @@ def main():
                                                           rec.age, rec.designation),
                             unsafe_allow_html=True)
 
-            # if st.button("View Doctor by Department ID"):
-            #     record_ids = [record.id for record in DepartmentRepository.find_all_departments(db)]
-            #     dept_id = st.selectbox("Choose Department ID", record_ids)
-            #     records = DoctorRepository.find_doctor_by_dept_id(db, dept_id)
-            #     for rec in records:
-            #         st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
-            #                                                   rec.age, rec.designation),
-            #                     unsafe_allow_html=True)
-
         elif choice == "Find Doctor By ID":
             record_ids = [record.id for record in DoctorRepository.find_all_doctors(db)]
             doc_id = st.selectbox("Choose Doctor ID", record_ids)
             records = DoctorRepository.find_doctor_by_id(db, doc_id)
             for rec in records:
+                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                          rec.age, rec.designation),
+                            unsafe_allow_html=True)
+
+        elif choice == "Find Doctor by Department ID":
+            st.subheader("Find Doctors by Department ID")
+            dept_ids = [record.id for record in DepartmentRepository.find_all_departments(db)]
+            dept_id = st.selectbox("Choose Department ID", dept_ids)
+            doc_ids = Doctor2DepartmentRepository.find_doctor_by_dept_id(db, dept_id)
+            doc_records = [DoctorRepository.find_doctor_by_id(db, id)[0] for id in doc_ids]
+            for rec in doc_records:
                 st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
                                                           rec.age, rec.designation),
                             unsafe_allow_html=True)
@@ -82,6 +100,16 @@ def main():
                 DoctorRepository.update_doctor(db, id, fn, ln, age, designation)
                 st.success("Doctor: {} {} successfully updated!".format(fn, ln))
 
+        elif choice == "Find Departments by Doctor ID":
+            st.subheader("View Departments by Doctor ID")
+            doc_ids = [record.id for record in DoctorRepository.find_all_doctors(db)]
+            doc_id = st.selectbox("Choose Doctor ID", doc_ids)
+            dept_ids = Doctor2DepartmentRepository.find_dept_by_doc_id(db, doc_id)
+            dept_records = [DepartmentRepository.find_department_by_id(db, id)[0] for id in dept_ids]
+            for rec in dept_records:
+                st.markdown(html.view_departments_temp.format(rec.id, rec.dept_name, rec.building_name),
+                            unsafe_allow_html=True)
+
         elif choice == "View Patients":
             st.subheader("View Patients")
             records = PatientRepository.find_all_patients(db)
@@ -99,6 +127,17 @@ def main():
                 st.markdown(html.view_patients_temp.format(rec.id, rec.first_name, rec.last_name,
                                                            rec.gender, rec.dob, rec.phone,
                                                            rec.address),
+                            unsafe_allow_html=True)
+
+        elif choice == "Find Patients By Insurance ID":
+            st.subheader("Find Patients By Insurance ID")
+            ins_ids = [record.id for record in InsuranceRepository.find_all_insurances(db)]
+            insurance_id = st.selectbox("Choose Insurance ID", ins_ids)
+            patient_ids = InsuranceRepository.find_patient_by_insurance_id(db, insurance_id)
+            precords = [PatientRepository.find_patient_by_id(db, id)[0] for id in patient_ids]
+            for rec in precords:
+                st.markdown(html.view_patients_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                           rec.gender, rec.dob, rec.phone, rec.address),
                             unsafe_allow_html=True)
 
         elif choice == "Create Patient":
@@ -229,6 +268,9 @@ def main():
             if st.button('Update'):
                 InsuranceRepository.update_insurance(db, id, pname, edate, patient_id)
                 st.success("Insurance: {} successfully updated!".format(pname))
+
+    except Exception as e:
+        raise Exception(e)
 
     finally:
         db.close()

@@ -113,6 +113,28 @@ class DepartmentRepository:
         db_session.commit()
 
 
+class Doctor2DepartmentRepository:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def find_doctor_by_dept_id(db, dept_id):
+        records = db.query(Doctor2Department).where(
+            Doctor2Department.dept_id == dept_id
+        )
+        doc_ids = [r.doctor_id for r in records]
+        return doc_ids
+
+    @staticmethod
+    def find_dept_by_doc_id(db, doc_id):
+        records = db.query(Doctor2Department).where(
+            Doctor2Department.doctor_id == doc_id
+        )
+        dept_ids = [r.dept_id for r in records]
+        return dept_ids
+
+
 class MedicineRepository:
 
     def __init__(self):
@@ -179,3 +201,9 @@ class InsuranceRepository:
             {"provider_name": pname, "exp_date": edate, "patient_id": pid}
         )
         db_session.commit()
+
+    @staticmethod
+    def find_patient_by_insurance_id(db, id):
+        records = db.query(Insurance).where(Insurance.id == id)
+        pids = [r.patient_id for r in records]
+        return pids

@@ -6,9 +6,9 @@ title_temp = """
 
 home_temp = """
     <div style="background-color:silver;overflow-x: auto; padding:10px;border-radius:5px;margin:10px;">
-    <p style="text-align:justify;color:black;padding:10px;font-size:20px">
+    <h3 style="text-align:justify;color:black;padding:10px;font-size:20px">
         WELCOME!
-    </p>
+    </h3>
     <p style="text-align:justify;color:black;padding:10px;font-size:20px">
         The available tables in the interface are:
         <ol style="text-align:justify;color:black;padding:10px;">

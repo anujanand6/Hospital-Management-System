@@ -409,8 +409,8 @@ def main():
                                                      bill.medicine_charge, bill.patient_id, bill.insurance_id),
                             unsafe_allow_html=True)
 
-        elif choice == "Delete Lab Fee By ID":
-            st.subheader("Delete Lab Fee By ID")
+        elif choice == "Delete Lab Fees By ID":
+            st.subheader("Delete Lab Fees By ID")
             record_ids = [record.id for record in LabFeeRepository.find_all_labfees(db)]
             labfee_id = st.selectbox("Choose Bill ID", record_ids)
             if st.button('Delete'):

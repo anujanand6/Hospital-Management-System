@@ -1,6 +1,18 @@
 from models import Doctor, Patient, Department, \
     Medicine, Insurance, Designation, Doctor2Department, \
-    Bill, Appointment
+    Bill, Appointment, LabFee, RoomFee
+
+"""
+This file contains repositories for each model in the DB.
+
+Each repository has the functions to implement the following functions:
+1) Find all records
+2) Find by ID
+3) Create a new record
+4) Delete by ID
+5) Update by ID
+
+"""
 
 
 class DoctorRepository:
@@ -243,10 +255,9 @@ class BillRepository:
         db_session.commit()
 
     @staticmethod
-    def update_bill(db_session, id, dchar, medchar, pid, iid):
+    def update_bill(db_session, id, dchar, medchar):
         db_session.query(Bill).where(Bill.id == id).update(
-            {"doctor_charge": dchar, "medicine_charge": medchar,
-             "patient_id": pid, "insurance_id": iid}
+            {"doctor_charge": dchar, "medicine_charge": medchar}
         )
         db_session.commit()
 
@@ -261,3 +272,90 @@ class BillRepository:
         records = db.query(Bill).where(Bill.insurance_id == id)
         return records
 
+
+class AppointmentRepository:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def find_all_appts(db):
+        records = db.query(Appointment).all()
+        return records
+
+    @staticmethod
+    def find_appt_by_id(db, id):
+        records = db.query(Appointment).where(Appointment.id == id)
+        return records
+
+    @staticmethod
+    def create_appt(db_session, created, date, time, pid, did):
+        new_record = Appointment(created=created, appt_date=date, appt_time=time,
+                                 patient_id=pid, doctor_id=did)
+        db_session.add(new_record)
+        db_session.commit()
+
+    @staticmethod
+    def delete_appt_by_id(db_session, id):
+        db_session.query(Appointment).where(Appointment.id == id).delete()
+        db_session.commit()
+
+    @staticmethod
+    def update_appt(db_session, id, created, date, time, pid, did):
+        db_session.query(Appointment).where(Appointment.id == id).update(
+            {"created": created, "appt_date": date, "appt_time": time,
+             "patient_id": pid, "doctor_id": did}
+        )
+        db_session.commit()
+
+    @staticmethod
+    def find_doctor_by_patient_id(db, pid):
+        records = db.query(Appointment).where(
+            Appointment.patient_id == pid
+        )
+        doc_ids = [r.doctor_id for r in records]
+        return doc_ids
+
+    @staticmethod
+    def find_patient_by_doctor_id(db, did):
+        records = db.query(Appointment).where(
+            Appointment.doctor_id == did
+        )
+        pids = [r.patient_id for r in records]
+        return pids
+
+
+class LabFeeRepository:
+
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def find_all_labfees(db):
+        records = db.query(LabFee).all()
+        return records
+
+    @staticmethod
+    def find_labfee_by_id(db, id):
+        records = db.query(LabFee).where(LabFee.id == id)
+        return records
+
+    @staticmethod
+    def delete_labfee_by_id(db_session, id):
+        db_session.query(LabFee).where(LabFee.id == id).delete()
+        db_session.commit()
+
+    @staticmethod
+    def create_labfee(db_session, id, tname, tdate, type, cost):
+        new_record = LabFee(id=id, test_name=tname, test_date=tdate,
+                            test_type=type, test_charge=cost)
+        db_session.add(new_record)
+        db_session.commit()
+
+    @staticmethod
+    def update_labfee(db_session, id, tname, tdate, type, cost):
+        db_session.query(LabFee).where(LabFee.id == id).update(
+            {"test_name": tname, "test_date": tdate,
+             "test_type": type, "test_charge": cost}
+        )
+        db_session.commit()

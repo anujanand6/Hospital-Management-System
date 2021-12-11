@@ -4,7 +4,28 @@ title_temp = """
     </div>
     """
 
-view_doctors_temp = """
+home_temp = """
+    <div style="background-color:silver;overflow-x: auto; padding:10px;border-radius:5px;margin:10px;">
+    <p style="text-align:justify;color:black;padding:10px;font-size:20px">
+        WELCOME!
+    </p>
+    <p style="text-align:justify;color:black;padding:10px;font-size:20px">
+        The available tables in the interface are:
+        <ol style="text-align:justify;color:black;padding:10px;">
+            <li font-size:20px> Doctors </l1>
+            <li font-size:20px> Patients </l1>
+            <li font-size:20px> Medicines </l1>
+            <li font-size:20px> Insurances </l1>
+        </ol>
+    </p>
+    <p style="text-align:justify;color:black;padding:10px;font-size:20px">
+        Please choose an option from the side bar on the left.
+    </p>
+    </div>
+    """
+
+
+doctors_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
     <p style="font-size:16px;">ID: {}</P>
     <p style="font-size:16px;">First Name: {}</p>
@@ -14,7 +35,7 @@ view_doctors_temp = """
     </div>
     """
 
-view_patients_temp = """
+patients_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
     <p style="font-size:16px;">ID: {}</h6>
     <p style="font-size:16px;">First Name: {}</h6>
@@ -26,7 +47,7 @@ view_patients_temp = """
     </div>
     """
 
-view_departments_temp = """
+departments_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
     <p style="font-size:16px;">ID: {}</h6>
     <p style="font-size:16px;">Department Name: {}</h6>
@@ -34,7 +55,7 @@ view_departments_temp = """
     </div>
     """
 
-view_medicines_temp = """
+medicines_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
     <p style="font-size:16px;">ID: {}</h6>
     <p style="font-size:16px;">Medicine Name: {}</h6>
@@ -43,7 +64,7 @@ view_medicines_temp = """
     </div>
     """
 
-view_insurances_temp = """
+insurances_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
     <p style="font-size:16px;">Insurance ID: {}</h6>
     <p style="font-size:16px;">Provider Name: {}</h6>
@@ -52,10 +73,12 @@ view_insurances_temp = """
     </div>
     """
 
-view_bills_temp = """
+bills_temp = """
     <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
     <p style="font-size:16px;">Bill ID: {}</h6>
     <p style="font-size:16px;">Doctor Charge: {}</h6>
     <p style="font-size:16px;">Medicine Charge: {}</h6>
+    <p style="font-size:16px;">Patient ID: {}</h6>
+    <p style="font-size:16px;">Insurance ID: {}</h6>
     </div>
     """

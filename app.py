@@ -1,10 +1,11 @@
 import streamlit as st
+
+from menu import OPTION_LIST
 import html_templates as html
 from database import SessionLocal, engine
-from menu import OPTION_LIST
 from repositories import DoctorRepository, PatientRepository, \
     MedicineRepository, InsuranceRepository, DepartmentRepository, \
-    Doctor2DepartmentRepository, BillRepository
+    Doctor2DepartmentRepository, BillRepository, AppointmentRepository
 
 
 def create_db_session():
@@ -13,39 +14,40 @@ def create_db_session():
 
 
 def main():
+    # Create new DB Session
     db = create_db_session()
 
+    # Display title
     st.markdown(html.title_temp.format('royalblue', 'white'), unsafe_allow_html=True)
 
+    # Choose option from sidebar
     choice = st.sidebar.radio("Menu", OPTION_LIST)
 
     try:
 
-        # with st.sidebar.expander('Doctors', expanded=False):
-        #     choice = st.radio("Menu", menu)
-        #
-        # with st.sidebar.expander('Patients', expanded=False):
-        #     choice = st.radio("Patients", ["View Patients"])
-
         if choice == "Home":
-            st.text("This is the front end interface.")
-            # st.markdown(html.home_temp, unsafe_allow_html=True)
+            st.markdown(html.home_temp, unsafe_allow_html=True)
+
+        ##############
+        # Doctor
+        ##############
 
         elif choice == "View Doctors":
             st.subheader("View Doctors")
             records = DoctorRepository.find_all_doctors(db)
             for rec in records:
-                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
-                                                          rec.age, rec.designation),
+                st.markdown(html.doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                     rec.age, rec.designation),
                             unsafe_allow_html=True)
 
         elif choice == "Find Doctor By ID":
             record_ids = [record.id for record in DoctorRepository.find_all_doctors(db)]
+            # List IDs of all available doctors in the DB
             doc_id = st.selectbox("Choose Doctor ID", record_ids)
             records = DoctorRepository.find_doctor_by_id(db, doc_id)
             for rec in records:
-                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
-                                                          rec.age, rec.designation),
+                st.markdown(html.doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                     rec.age, rec.designation),
                             unsafe_allow_html=True)
 
         elif choice == "Find Doctor by Department ID":
@@ -55,8 +57,8 @@ def main():
             doc_ids = Doctor2DepartmentRepository.find_doctor_by_dept_id(db, dept_id)
             doc_records = [DoctorRepository.find_doctor_by_id(db, id)[0] for id in doc_ids]
             for rec in doc_records:
-                st.markdown(html.view_doctors_temp.format(rec.id, rec.first_name, rec.last_name,
-                                                          rec.age, rec.designation),
+                st.markdown(html.doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                     rec.age, rec.designation),
                             unsafe_allow_html=True)
 
         elif choice == "Create Doctor":
@@ -100,15 +102,30 @@ def main():
             dept_ids = Doctor2DepartmentRepository.find_dept_by_doc_id(db, doc_id)
             dept_records = [DepartmentRepository.find_department_by_id(db, id)[0] for id in dept_ids]
             for rec in dept_records:
-                st.markdown(html.view_departments_temp.format(rec.id, rec.dept_name, rec.building_name),
+                st.markdown(html.departments_temp.format(rec.id, rec.dept_name, rec.building_name),
                             unsafe_allow_html=True)
+
+        elif choice == "Find Doctors by Patient ID":
+            st.subheader("Find Doctors by Patient ID")
+            pids = [record.id for record in PatientRepository.find_all_patients(db)]
+            patient_id = st.selectbox("Choose Patient ID", pids)
+            doc_ids = AppointmentRepository.find_doctor_by_patient_id(db, patient_id)
+            doc_records = [DoctorRepository.find_doctor_by_id(db, id)[0] for id in doc_ids]
+            for rec in doc_records:
+                st.markdown(html.doctors_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                     rec.age, rec.designation),
+                            unsafe_allow_html=True)
+
+        ##############
+        # Patient
+        ##############
 
         elif choice == "View Patients":
             st.subheader("View Patients")
             records = PatientRepository.find_all_patients(db)
             for rec in records:
-                st.markdown(html.view_patients_temp.format(rec.id, rec.first_name, rec.last_name,
-                                                           rec.gender, rec.dob, rec.phone, rec.address),
+                st.markdown(html.patients_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                      rec.gender, rec.dob, rec.phone, rec.address),
                             unsafe_allow_html=True)
 
         elif choice == "Find Patient By ID":
@@ -117,9 +134,9 @@ def main():
             patient_id = st.selectbox("Choose Patient ID", record_ids)
             records = PatientRepository.find_patient_by_id(db, patient_id)
             for rec in records:
-                st.markdown(html.view_patients_temp.format(rec.id, rec.first_name, rec.last_name,
-                                                           rec.gender, rec.dob, rec.phone,
-                                                           rec.address),
+                st.markdown(html.patients_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                      rec.gender, rec.dob, rec.phone,
+                                                      rec.address),
                             unsafe_allow_html=True)
 
         elif choice == "Find Patients By Insurance ID":
@@ -127,10 +144,21 @@ def main():
             ins_ids = [record.id for record in InsuranceRepository.find_all_insurances(db)]
             insurance_id = st.selectbox("Choose Insurance ID", ins_ids)
             patient_ids = InsuranceRepository.find_patient_by_insurance_id(db, insurance_id)
-            precords = [PatientRepository.find_patient_by_id(db, id)[0] for id in patient_ids]
-            for rec in precords:
-                st.markdown(html.view_patients_temp.format(rec.id, rec.first_name, rec.last_name,
-                                                           rec.gender, rec.dob, rec.phone, rec.address),
+            patient_records = [PatientRepository.find_patient_by_id(db, id)[0] for id in patient_ids]
+            for rec in patient_records:
+                st.markdown(html.patients_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                      rec.gender, rec.dob, rec.phone, rec.address),
+                            unsafe_allow_html=True)
+
+        elif choice == "Find Patients By Doctor ID":
+            st.subheader("Find Patients By Doctor ID")
+            dids = [record.id for record in DoctorRepository.find_all_doctors(db)]
+            doctor_id = st.selectbox("Choose Doctor ID", dids)
+            patient_ids = AppointmentRepository.find_patient_by_doctor_id(db, doctor_id)
+            patient_records = [PatientRepository.find_patient_by_id(db, id)[0] for id in patient_ids]
+            for rec in patient_records:
+                st.markdown(html.patients_temp.format(rec.id, rec.first_name, rec.last_name,
+                                                      rec.gender, rec.dob, rec.phone, rec.address),
                             unsafe_allow_html=True)
 
         elif choice == "Create Patient":
@@ -168,12 +196,16 @@ def main():
                 PatientRepository.update_patient(db, id, fn, ln, gen, dob, phone, address)
                 st.success("Patient: {} {} successfully updated!".format(fn, ln))
 
+        ##############
+        # Medicine
+        ##############
+
         elif choice == "View Medicines":
             st.subheader("View Medicines")
             records = MedicineRepository.find_all_medicines(db)
             for record in records:
-                st.markdown(html.view_medicines_temp.format(record.id, record.med_name,
-                                                            record.med_type, record.cost),
+                st.markdown(html.medicines_temp.format(record.id, record.med_name,
+                                                       record.med_type, record.cost),
                             unsafe_allow_html=True)
 
         elif choice == "Find Medicine By ID":
@@ -182,7 +214,7 @@ def main():
             medicine_id = st.selectbox("Choose Medicine ID", record_ids)
             records = MedicineRepository.find_medicine_by_id(db, medicine_id)
             for rec in records:
-                st.markdown(html.view_medicines_temp.format(rec.id, rec.med_name, rec.med_type, rec.cost),
+                st.markdown(html.medicines_temp.format(rec.id, rec.med_name, rec.med_type, rec.cost),
                             unsafe_allow_html=True)
 
         elif choice == "Create Medicine":
@@ -214,12 +246,16 @@ def main():
                 MedicineRepository.update_medicine(db, id, mname, mtype, cost)
                 st.success("Medicine: {} successfully updated!".format(mname))
 
+        ##############
+        # Insurance
+        ##############
+
         elif choice == "View Insurances":
             st.subheader("View Insurances")
             records = InsuranceRepository.find_all_insurances(db)
             for record in records:
-                st.markdown(html.view_insurances_temp.format(record.id, record.provider_name,
-                                                             record.exp_date, record.patient_id),
+                st.markdown(html.insurances_temp.format(record.id, record.provider_name,
+                                                        record.exp_date, record.patient_id),
                             unsafe_allow_html=True)
 
         elif choice == "Find Insurance By ID":
@@ -228,8 +264,8 @@ def main():
             insurance_id = st.selectbox("Choose Insurance ID", record_ids)
             records = InsuranceRepository.find_insurance_by_id(db, insurance_id)
             for rec in records:
-                st.markdown(html.view_insurances_temp.format(rec.id, rec.provider_name,
-                                                             rec.exp_date, rec.patient_id),
+                st.markdown(html.insurances_temp.format(rec.id, rec.provider_name,
+                                                        rec.exp_date, rec.patient_id),
                             unsafe_allow_html=True)
 
         elif choice == "Create Insurance":
@@ -268,8 +304,8 @@ def main():
             rec_id = st.selectbox("Choose Patient ID", rec_ids)
             records = InsuranceRepository.find_insurances_by_patient_id(db, rec_id)
             for rec in records:
-                st.markdown(html.view_insurances_temp.format(rec.id, rec.provider_name,
-                                                             rec.exp_date, rec.patient_id),
+                st.markdown(html.insurances_temp.format(rec.id, rec.provider_name,
+                                                        rec.exp_date, rec.patient_id),
                             unsafe_allow_html=True)
 
         elif choice == "Find Insurances By Bill ID":
@@ -279,22 +315,75 @@ def main():
             insurance_ids = BillRepository.find_insurance_by_bill_id(db, rec_id)
             records = [InsuranceRepository.find_insurance_by_id(db, id)[0] for id in insurance_ids]
             for rec in records:
-                st.markdown(html.view_insurances_temp.format(rec.id, rec.provider_name,
-                                                             rec.exp_date, rec.patient_id),
+                st.markdown(html.insurances_temp.format(rec.id, rec.provider_name,
+                                                        rec.exp_date, rec.patient_id),
                             unsafe_allow_html=True)
+
+        ##############
+        # Bills
+        ##############
+
+        elif choice == "View Bills":
+            st.subheader("View Bills")
+            records = BillRepository.find_all_bills(db)
+            for record in records:
+                st.markdown(html.bills_temp.format(record.id, record.medicine_charge, record.doctor_charge,
+                                                   record.patient_id, record.insurance_id),
+                            unsafe_allow_html=True)
+
+        elif choice == "Find Bill By ID":
+            st.subheader("Find Bill By ID")
+            record_ids = [record.id for record in BillRepository.find_all_bills(db)]
+            bill_id = st.selectbox("Choose Bill ID", record_ids)
+            records = BillRepository.find_bill_by_id(db, bill_id)
+            for record in records:
+                st.markdown(html.bills_temp.format(record.id, record.medicine_charge, record.doctor_charge,
+                                                   record.patient_id, record.insurance_id),
+                            unsafe_allow_html=True)
+
+        elif choice == "Create Bill":
+            st.subheader("Create Bill")
+            dchar = st.text_input("Enter Doctor Charge")
+            mchar = st.text_input("Enter Medicine Charge")
+            pid = st.selectbox("Choose Patient ID",
+                               [record.id for record in PatientRepository.find_all_patients(db)])
+            iid = st.selectbox("Choose Insurance ID",
+                               [record.id for record in InsuranceRepository.find_insurances_by_patient_id(db, pid)])
+            if st.button('Create'):
+                BillRepository.create_bill(db, dchar, mchar, pid, iid)
+                st.success("Bill successfully created!")
+
+        elif choice == "Delete Bill By ID":
+            st.subheader("Delete Bill By ID")
+            record_ids = [record.id for record in BillRepository.find_all_bills(db)]
+            bill_id = st.selectbox("Choose Bill ID", record_ids)
+            if st.button('Delete'):
+                BillRepository.delete_bill_by_id(db, bill_id)
+                st.success("Bill: {} successfully deleted!".format(bill_id))
+
+        elif choice == "Update Bill":
+            st.subheader("Update Bill")
+            record_ids = [record.id for record in BillRepository.find_all_bills(db)]
+            bill_id = st.selectbox("Choose Bill ID", record_ids)
+            record = BillRepository.find_bill_by_id(db, bill_id)[0]
+            dchar = st.text_input("Enter Doctor Charge", value=record.doctor_charge)
+            mchar = st.text_input("Enter Medicine Charge", value=record.medicine_charge)
+            if st.button('Update'):
+                BillRepository.update_bill(db, bill_id, dchar, mchar)
+                st.success("Bill: {} successfully updated!".format(bill_id))
 
         elif choice == "Find Bills By Insurance ID":
             st.subheader("Find Bills By Insurance ID")
-            rec_ids = [record.id for record in InsuranceRepository.find_all_insurances(db)]
-            rec_id = st.selectbox("Choose Insurance ID", rec_ids)
+            rec_id = st.selectbox("Choose Insurance ID",
+                                  [record.id for record in InsuranceRepository.find_all_insurances(db)])
             records = BillRepository.find_bills_by_insurance_id(db, rec_id)
-            for rec in records:
-                st.markdown(html.view_bills_temp.format(rec.id, rec.medicine_charge, rec.doctor_charge),
+            for record in records:
+                st.markdown(html.bills_temp.format(record.id, record.medicine_charge, record.doctor_charge,
+                                                   record.patient_id, record.insurance_id),
                             unsafe_allow_html=True)
 
-
-    except Exception as e:
-        raise Exception(e)
+    # except Exception as e:
+    #     raise Exception(e)
 
     finally:
         db.close()

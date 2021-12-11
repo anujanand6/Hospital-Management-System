@@ -16,6 +16,18 @@ home_temp = """
             <li font-size:20px> Patients </l1>
             <li font-size:20px> Medicines </l1>
             <li font-size:20px> Insurances </l1>
+            <li font-size:20px> Bills </l1>
+            <li font-size:20px> Lab Fees </l1>
+        </ol>
+    </p>
+    <p style="text-align:justify;color:black;padding:10px;font-size:20px">
+        The implemented relationships and their types are shown below:
+        <ol style="text-align:justify;color:black;padding:10px;">
+            <li font-size:20px> Doctors to Patients -> Many to Many </l1>
+            <li font-size:20px> Doctors to Departments -> Many to Many </l1>
+            <li font-size:20px> Patient to Insurances -> One to Many</l1>
+            <li font-size:20px> Insurance to Bills -> One to Many</l1>
+            <li font-size:20px> Bill to Lab Fee -> One to One</l1>
         </ol>
     </p>
     <p style="text-align:justify;color:black;padding:10px;font-size:20px">
@@ -26,7 +38,7 @@ home_temp = """
 
 
 doctors_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <div style="background-color:silver;padding:10px;border-radius:5px;margin:10px;color:black;">
     <p style="font-size:16px;">ID: {}</P>
     <p style="font-size:16px;">First Name: {}</p>
     <p style="font-size:16px;">Last Name: {}</p>
@@ -36,7 +48,7 @@ doctors_temp = """
     """
 
 patients_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <div style="background-color:silver;padding:10px;border-radius:5px;margin:10px;color:black;">
     <p style="font-size:16px;">ID: {}</h6>
     <p style="font-size:16px;">First Name: {}</h6>
     <p style="font-size:16px;">Last Name: {}</h6>
@@ -48,7 +60,7 @@ patients_temp = """
     """
 
 departments_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <div style="background-color:silver;padding:10px;border-radius:5px;margin:10px;color:black;">
     <p style="font-size:16px;">ID: {}</h6>
     <p style="font-size:16px;">Department Name: {}</h6>
     <p style="font-size:16px;">Building Name: {}</h6>
@@ -56,7 +68,7 @@ departments_temp = """
     """
 
 medicines_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <div style="background-color:silver;padding:10px;border-radius:5px;margin:10px;color:black;">
     <p style="font-size:16px;">ID: {}</h6>
     <p style="font-size:16px;">Medicine Name: {}</h6>
     <p style="font-size:16px;">Medicine Type: {}</h6>
@@ -65,7 +77,7 @@ medicines_temp = """
     """
 
 insurances_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <div style="background-color:silver;padding:10px;border-radius:5px;margin:10px;color:black;">
     <p style="font-size:16px;">Insurance ID: {}</h6>
     <p style="font-size:16px;">Provider Name: {}</h6>
     <p style="font-size:16px;">Expiry Date: {}</h6>
@@ -74,7 +86,7 @@ insurances_temp = """
     """
 
 bills_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <div style="background-color:silver;padding:10px;border-radius:5px;margin:10px;color:black;">    
     <p style="font-size:16px;">Bill ID: {}</h6>
     <p style="font-size:16px;">Doctor Charge: {}</h6>
     <p style="font-size:16px;">Medicine Charge: {}</h6>
@@ -84,7 +96,7 @@ bills_temp = """
     """
 
 labfees_temp = """
-    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <div style="background-color:silver;padding:10px;border-radius:5px;margin:10px;color:black;">
     <p style="font-size:16px;">Bill ID: {}</h6>
     <p style="font-size:16px;">Test Name: {}</h6>
     <p style="font-size:16px;">Test Date: {}</h6>

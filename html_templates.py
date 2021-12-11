@@ -82,3 +82,17 @@ bills_temp = """
     <p style="font-size:16px;">Insurance ID: {}</h6>
     </div>
     """
+
+labfees_temp = """
+    <div style="background-color:#464e5f;padding:10px;border-radius:5px;margin:10px;">
+    <p style="font-size:16px;">Bill ID: {}</h6>
+    <p style="font-size:16px;">Test Name: {}</h6>
+    <p style="font-size:16px;">Test Date: {}</h6>
+    <p style="font-size:16px;">Test Type: {}</h6>
+    <p style="font-size:16px;">Test Charge: {}</h6>
+    <p style="font-size:16px;">Doctor Charge: {}</h6>
+    <p style="font-size:16px;">Medicine Charge: {}</h6>
+    <p style="font-size:16px;">Patient ID: {}</h6>
+    <p style="font-size:16px;">Insurance ID: {}</h6>
+    </div>
+    """

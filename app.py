@@ -5,7 +5,8 @@ import html_templates as html
 from database import SessionLocal, engine
 from repositories import DoctorRepository, PatientRepository, \
     MedicineRepository, InsuranceRepository, DepartmentRepository, \
-    Doctor2DepartmentRepository, BillRepository, AppointmentRepository
+    Doctor2DepartmentRepository, BillRepository, AppointmentRepository, \
+    LabFeeRepository
 
 
 def create_db_session():
@@ -382,8 +383,71 @@ def main():
                                                    record.patient_id, record.insurance_id),
                             unsafe_allow_html=True)
 
-    # except Exception as e:
-    #     raise Exception(e)
+        ##############
+        # Lab Fees
+        ##############
+
+        elif choice == "View Lab Fees":
+            st.subheader("View Lab Fees")
+            labfees_records = LabFeeRepository.find_all_labfees(db)
+            for labfee in labfees_records:
+                bill = BillRepository.find_bill_by_id(db, labfee.id)[0]
+                st.markdown(html.labfees_temp.format(labfee.id, labfee.test_name, labfee.test_date,
+                                                     labfee.test_type, labfee.test_charge, bill.doctor_charge,
+                                                     bill.medicine_charge, bill.patient_id, bill.insurance_id),
+                            unsafe_allow_html=True)
+
+        elif choice == "Find Lab Fees By Bill ID":
+            st.subheader("Find Lab Fees By Bill ID")
+            record_ids = [record.id for record in LabFeeRepository.find_all_labfees(db)]
+            labfee_id = st.selectbox("Choose Lab Fee ID", record_ids)
+            labfees_records = LabFeeRepository.find_labfee_by_id(db, labfee_id)
+            for labfee in labfees_records:
+                bill = BillRepository.find_bill_by_id(db, labfee.id)[0]
+                st.markdown(html.labfees_temp.format(labfee.id, labfee.test_name, labfee.test_date,
+                                                     labfee.test_type, labfee.test_charge, bill.doctor_charge,
+                                                     bill.medicine_charge, bill.patient_id, bill.insurance_id),
+                            unsafe_allow_html=True)
+
+        elif choice == "Delete Lab Fee By ID":
+            st.subheader("Delete Lab Fee By ID")
+            record_ids = [record.id for record in LabFeeRepository.find_all_labfees(db)]
+            labfee_id = st.selectbox("Choose Bill ID", record_ids)
+            if st.button('Delete'):
+                LabFeeRepository.delete_labfee_by_id(db, labfee_id)
+                st.success("Lab Fee: {} successfully deleted!".format(labfee_id))
+
+        # TODO
+        elif choice == "Create Lab Fees":
+            st.subheader("Create Lab Fees")
+            record_ids = [record.id for record in BillRepository.find_all_bills(db)]
+            bill_id = st.selectbox("Choose Bill ID", record_ids)
+            tname = st.text_input("Enter test name")
+            tdate = st.text_input("Enter test date (YYYY-MM-DD)")
+            ttype = st.text_input("Enter test type")
+            cost = st.text_input("Enter test charge")
+            if st.button('Create'):
+                LabFeeRepository.create_labfee(db, bill_id, tname, tdate, ttype, cost)
+                st.success("Lab Fee for Bill ID: {} successfully created!".format(bill_id))
+
+        elif choice == "Update Lab Fees":
+            st.subheader("Update Lab Fees")
+            record_ids = [record.id for record in LabFeeRepository.find_all_labfees(db)]
+            labfee_id = st.selectbox("Choose Lab Fee ID", record_ids)
+            labfee = LabFeeRepository.find_labfee_by_id(db, labfee_id)[0]
+            bill = BillRepository.find_bill_by_id(db, labfee.id)[0]
+
+            tname = st.text_input("Enter test name", value=labfee.test_name)
+            tdate = st.text_input("Enter test date (YYYY-MM-DD)", value=labfee.test_date)
+            ttype = st.text_input("Enter test type", value=labfee.test_type)
+            cost = st.text_input("Enter test charge", value=labfee.test_charge)
+            dchar = st.text_input("Enter Doctor Charge", value=bill.doctor_charge)
+            mchar = st.text_input("Enter Medicine Charge", value=bill.medicine_charge)
+
+            if st.button('Update'):
+                BillRepository.update_bill(db, labfee_id, dchar, mchar)
+                LabFeeRepository.update_labfee(db, labfee_id, tname, tdate, ttype, cost)
+                st.success("Lab Fees: {} successfully updated!".format(labfee_id))
 
     finally:
         db.close()

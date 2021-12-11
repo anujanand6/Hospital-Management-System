@@ -40,5 +40,12 @@ OPTION_LIST = ["Home",
                "Create Bill",
                "Update Bill",
                "Delete Bill By ID",
-               "Find Bills By Insurance ID"
+               "Find Bills By Insurance ID",
+               " -------- ",
+
+               "View Lab Fees",
+               "Find Lab Fees By Bill ID",
+               "Create Lab Fees",
+               "Update Lab Fees",
+               "Delete Lab Fees By ID",
                ]

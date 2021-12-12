@@ -12,6 +12,7 @@ This repository serves as the final project for the course CS 5200 Database Mana
    4) Click on ```Load Folder Contents```
    5) Select the ```db_project``` schema
    6) Click on ```Start Import```
-5) Open the terminal and navigate to the project directory
-6) Run the command:``` streamlit run app.py ```
-7) The streamlit webpage should be accessible from the browser on this URL: ```http://localhost:8501/```
+5) Modify the variables ```USER```, ```PASSWORD``` and ```DB_SCHEMA``` in the ```database.py```
+6) Open the terminal and navigate to the project directory
+7) Run the command:``` streamlit run app.py ```
+8) The streamlit webpage should be accessible from the browser on this URL: ```http://localhost:8501/```
